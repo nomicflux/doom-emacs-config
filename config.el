@@ -58,33 +58,69 @@
 (require 'evil-snipe)
 (require 'evil-easymotion)
 
-(defmacro def-wrap-surrounding (name)
-  `(defun ,(read (concat "spx/wrap-surrounding-" name))
+(defmacro def-with-surrounding (name)
+  `(defun ,(read (concat "spx/with-surrounding-" name))
        (&optional arg)
-     (interactive "p")
-     (list (sp-backward-up-sexp)
-           (,(read (concat "sp-wrap-" name))))))
+     (interactive)
+     (sp-backward-up-sexp)
+     (,(read (concat "sp-" name)))))
 
-(def-wrap-surrounding "round")
-(def-wrap-surrounding "square")
-(def-wrap-surrounding "curly")
+(defmacro def-with-insert (name)
+  `(defun ,(read (concat name "-i"))
+       (&optional arg)
+     (interactive)
+     (,(read name))
+     (evil-insert)))
+
+(def-with-surrounding "wrap-round")
+(def-with-surrounding "wrap-square")
+(def-with-surrounding "wrap-curly")
+(def-with-surrounding "kill-sexp")
+(def-with-surrounding "copy-sexp")
+(def-with-surrounding "transpose-sexp")
+(def-with-surrounding "unwrap-sexp")
+(def-with-surrounding "splice-sexp")
+(def-with-surrounding "splice-sexp-killing-around")
+
+(defun spx/with-surrounding-wrap-round-i (&optional arg)
+  (interactive)
+  (spx/with-surrounding-wrap-round)
+  (call-interactively #'evil-insert)
+  )
 
 (defun configure-smartparens ()
   (map! :leader
         (:prefix ("k" . "smartparens")
-         :desc "wrap with parentheses" "(" 'sp-wrap-round
-         :desc "wrap surrounding with parentheses" ")" 'spx/wrap-surrounding-round
+         :desc "wrap with parens" "(" 'sp-wrap-round
+         :desc "surround with parens" ")" 'spx/with-surrounding-wrap-round
+         :desc "insert" "i" 'spx/with-surrounding-wrap-round-i
          :desc "wrap with brackets" "[" 'sp-wrap-square
-         :desc "wrap surrounding with brackets" "]" 'spx/wrap-surrounding-square
+         :desc "surround with brackets" "]" 'spx/with-surrounding-wrap-square
          :desc "wrap with braces" "{" 'sp-wrap-curly
-         :desc "wrap surrounding with braces" "}" 'spx/wrap-surrounding-curly
+         :desc "surround with braces" "}" 'spx/with-surrounding-wrap-curly
          :desc "slurp forward" "f" 'sp-forward-slurp-sexp
          :desc "barf forward" "F" 'sp-forward-barf-sexp
          :desc "slurp backward" "b" 'sp-backward-slurp-sexp
          :desc "barf backward" "b" 'sp-backward-barf-sexp
-         (:prefix ("w" . "Wrap")
-          :desc "Backticks" "`" 'sp-wrap-backtick
-          :desc "Tildes" "~" 'sp-wrap-tilde
+         :desc "up" "u" 'sp-up-sexp
+         :desc "backward down" "d" 'sp-backward-down-sexp
+         :desc "backward up" "U" 'sp-backward-up-sexp
+         :desc "down" "D" 'sp-down-sexp
+         :desc "kill" "k" 'sp-kill-sexp
+         :desc "kill surrounding" "K" 'spx/with-surrounding-kill-sexp
+         :desc "yank" "y" 'sp-copy-sexp
+         :desc "yank surrounding" "Y" 'spx/with-surrounding-copy-sexp
+         :desc "transpose" "t" 'sp-transpose-sexp
+         :desc "transpose surrounding" "T" 'spx/with-surrounding-transpose-sexp
+         :desc "unwrap" "-" 'sp-unwrap-sexp
+         :desc "unwrap surrounding" "_" 'spx/with-surrounding-unwrap-sexp
+         (:prefix ("s" . "splice")
+          :desc "sexp" "s" 'sp-splice-sexp
+          :desc "sexp surrounding" "S" 'spx/with-surrounding-splice-sexp
+          :desc "around" "a" 'sp-splice-sexp-killing-around
+          :desc "around surrounding" "A" 'spx/with-surrounding-splice-sexp-killing-around
+          :desc "forward" "f" 'sp-splice-sexp-killing-forward
+          :desc "backward" "b" 'sp-splice-sexp-killing-backward
           ))))
 
 (configure-smartparens)
