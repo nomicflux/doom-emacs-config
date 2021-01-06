@@ -85,19 +85,24 @@
 (defun spx/with-surrounding-wrap-round-i (&optional arg)
   (interactive)
   (spx/with-surrounding-wrap-round)
-  (call-interactively #'evil-insert)
-  )
+  (call-interactively #'evil-insert))
+
+(defun spx/select-surrounding (&optional arg)
+  (interactive)
+  (sp-backward-up-sexp)
+  (sp-select-next-thing))
 
 (defun configure-smartparens ()
   (map! :leader
         (:prefix ("k" . "smartparens")
          :desc "wrap with parens" "(" 'sp-wrap-round
          :desc "surround with parens" ")" 'spx/with-surrounding-wrap-round
-         :desc "insert" "i" 'spx/with-surrounding-wrap-round-i
+         :desc "surround and insert" "i" 'spx/with-surrounding-wrap-round-i
          :desc "wrap with brackets" "[" 'sp-wrap-square
          :desc "surround with brackets" "]" 'spx/with-surrounding-wrap-square
          :desc "wrap with braces" "{" 'sp-wrap-curly
          :desc "surround with braces" "}" 'spx/with-surrounding-wrap-curly
+         :desc "expand region" "e" 'er/expand-region
          :desc "slurp forward" "f" 'sp-forward-slurp-sexp
          :desc "barf forward" "F" 'sp-forward-barf-sexp
          :desc "slurp backward" "b" 'sp-backward-slurp-sexp
@@ -110,6 +115,7 @@
          :desc "kill surrounding" "K" 'spx/with-surrounding-kill-sexp
          :desc "yank" "y" 'sp-copy-sexp
          :desc "yank surrounding" "Y" 'spx/with-surrounding-copy-sexp
+         :desc "select surrounding" "S" 'spx/select-surrounding
          :desc "transpose" "t" 'sp-transpose-sexp
          :desc "transpose surrounding" "T" 'spx/with-surrounding-transpose-sexp
          :desc "unwrap" "-" 'sp-unwrap-sexp
@@ -123,7 +129,32 @@
           :desc "backward" "b" 'sp-splice-sexp-killing-backward
           ))))
 
+(defun configure-multiple-cursors ()
+  (map! :leader
+        (:prefix ("j" . "multiple-cursors")
+         :desc "edit lines" "e" 'mc/edit-lines
+         :desc "mark" "m" 'mc/mark-all-like-this-in-defun
+         :desc "mark all" "M" 'mc/mark-all-like-this
+         :desc "syms in defun" "s" 'mc/mark-all-symbols-like-this-in-defun
+         :desc "all syms" "S" 'mc/mark-all-symbols-like-this
+         :desc "words in defun" "w" 'mc/mark-all-words-like-this-in-defun
+         :desc "all words" "W" 'mc/mark-all-words-like-this
+         :desc "next" "n" 'mc/mark-next-like-this
+         :desc "next word" "N" 'mc/mark-next-like-this-word
+         :desc "prev" "h" 'mc/mark-previous-like-this
+         :desc "prev word" "H" 'mc/mark-previous-like-this-word
+         :desc "vertical align" "a" 'mc/vertical-align
+         :desc "mark tag pair" "t" 'mc/mark-sgml-tag-pair
+         :desc "pop" "p" 'mc/mark-pop
+         :desc "unmark next" "u" 'mc/unmark-next-like-this
+         :desc "skip to next" "U" 'mc/skip-to-next-like-this
+         :desc "unmark previous" "v" 'mc/unmark-previous-like-this
+         :desc "skip to previous" "V" 'mc/skip-to-previous-like-this
+         :desc "quit" "q" 'mc/keyboard-quit
+         )))
+
 (configure-smartparens)
+(configure-multiple-cursors)
 
 (defun clojure-mode-setup ()
   (require 'clj-refactor)
