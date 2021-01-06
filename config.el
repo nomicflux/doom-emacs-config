@@ -58,20 +58,16 @@
 (require 'evil-snipe)
 (require 'evil-easymotion)
 
-(defun spx/wrap-surrounding-round (&optional arg)
-  (interactive "p")
-  (list (sp-backward-up-sexp)
-        (sp-wrap-round)))
+(defmacro def-wrap-surrounding (name)
+  `(defun ,(read (concat "spx/wrap-surrounding-" name))
+       (&optional arg)
+     (interactive "p")
+     (list (sp-backward-up-sexp)
+           (,(read (concat "sp-wrap-" name))))))
 
-(defun spx/wrap-surrounding-square (&optional arg)
-  (interactive "p")
-  (list (sp-backward-up-sexp)
-        (sp-wrap-square)))
-
-(defun spx/wrap-surrounding-curly (&optional arg)
-  (interactive "p")
-  (list (sp-backward-up-sexp)
-        (sp-wrap-curly)))
+(def-wrap-surrounding "round")
+(def-wrap-surrounding "square")
+(def-wrap-surrounding "curly")
 
 (defun configure-smartparens ()
   (map! :leader
@@ -82,6 +78,10 @@
          :desc "wrap surrounding with brackets" "]" 'spx/wrap-surrounding-square
          :desc "wrap with braces" "{" 'sp-wrap-curly
          :desc "wrap surrounding with braces" "}" 'spx/wrap-surrounding-curly
+         :desc "slurp forward" "f" 'sp-forward-slurp-sexp
+         :desc "barf forward" "F" 'sp-forward-barf-sexp
+         :desc "slurp backward" "b" 'sp-backward-slurp-sexp
+         :desc "barf backward" "b" 'sp-backward-barf-sexp
          (:prefix ("w" . "Wrap")
           :desc "Backticks" "`" 'sp-wrap-backtick
           :desc "Tildes" "~" 'sp-wrap-tilde
