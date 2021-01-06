@@ -59,18 +59,24 @@
 (require 'evil-easymotion)
 
 (defmacro def-with-surrounding (name)
-  `(defun ,(read (concat "spx/with-surrounding-" name))
-       (&optional arg)
-     (interactive)
-     (sp-backward-up-sexp)
-     (,(read (concat "sp-" name)))))
-
-(defmacro def-with-insert (name)
-  `(defun ,(read (concat name "-i"))
-       (&optional arg)
-     (interactive)
-     (,(read name))
-     (evil-insert)))
+  (let ((sname (concat "spx/with-surrounding-" name)))
+    `(progn
+       (defun ,(read sname)
+           (&optional arg)
+         (interactive)
+         (sp-backward-up-sexp)
+         (,(read (concat "sp-" name))))
+       (defun ,(read (concat sname "-i"))
+           (&optional arg)
+         (interactive)
+         (,(read sname))
+         (call-interactively #'evil-insert))
+       (defun ,(read (concat "spx/" name "-i"))
+           (&optional arg)
+         (interactive)
+         (,(read (concat "sp-" name)))
+         (call-interactively #'evil-insert)))
+    ))
 
 (def-with-surrounding "wrap-round")
 (def-with-surrounding "wrap-square")
@@ -82,11 +88,6 @@
 (def-with-surrounding "splice-sexp")
 (def-with-surrounding "splice-sexp-killing-around")
 
-(defun spx/with-surrounding-wrap-round-i (&optional arg)
-  (interactive)
-  (spx/with-surrounding-wrap-round)
-  (call-interactively #'evil-insert))
-
 (defun spx/select-surrounding (&optional arg)
   (interactive)
   (sp-backward-up-sexp)
@@ -97,11 +98,12 @@
         (:prefix ("k" . "smartparens")
          :desc "wrap with parens" "(" 'sp-wrap-round
          :desc "surround with parens" ")" 'spx/with-surrounding-wrap-round
-         :desc "surround and insert" "i" 'spx/with-surrounding-wrap-round-i
          :desc "wrap with brackets" "[" 'sp-wrap-square
          :desc "surround with brackets" "]" 'spx/with-surrounding-wrap-square
          :desc "wrap with braces" "{" 'sp-wrap-curly
          :desc "surround with braces" "}" 'spx/with-surrounding-wrap-curly
+         :desc "convolute" "c" 'sp-convolute-sexp
+         :desc "swap" "C" 'sp-swap-enclosing-sexp
          :desc "expand region" "e" 'er/expand-region
          :desc "slurp forward" "f" 'sp-forward-slurp-sexp
          :desc "barf forward" "F" 'sp-forward-barf-sexp
@@ -120,14 +122,24 @@
          :desc "transpose surrounding" "T" 'spx/with-surrounding-transpose-sexp
          :desc "unwrap" "-" 'sp-unwrap-sexp
          :desc "unwrap surrounding" "_" 'spx/with-surrounding-unwrap-sexp
+         (:prefix ("i" . "insert")
+          :desc "wrap with parens" "(" 'spx/wrap-round-i
+          :desc "surround with parens" ")" 'spx/with-surrounding-wrap-round-i
+          :desc "wrap with brackets" "[" 'spx/wrap-square-i
+          :desc "surround with brackets" "]" 'spx/with-surrounding-wrap-square-i
+          :desc "wrap with braces" "{" 'spx/wrap-curly-i
+          :desc "surround with braces" "}" 'spx/with-surrounding-wrap-curly-i
+          :desc "kill" "k" 'spx/kill-sexp-i
+          :desc "kill surrounding" "K" 'spx/with-surrounding-kill-sexp-i
+          :desc "yank" "y" 'spx/copy-sexp-i
+          :desc "yank surrounding" "Y" 'spx/with-surrounding-copy-sexp-i)
          (:prefix ("s" . "splice")
           :desc "sexp" "s" 'sp-splice-sexp
           :desc "sexp surrounding" "S" 'spx/with-surrounding-splice-sexp
           :desc "around" "a" 'sp-splice-sexp-killing-around
           :desc "around surrounding" "A" 'spx/with-surrounding-splice-sexp-killing-around
           :desc "forward" "f" 'sp-splice-sexp-killing-forward
-          :desc "backward" "b" 'sp-splice-sexp-killing-backward
-          ))))
+          :desc "backward" "b" 'sp-splice-sexp-killing-backward))))
 
 (defun configure-multiple-cursors ()
   (map! :leader
@@ -150,8 +162,7 @@
          :desc "skip to next" "U" 'mc/skip-to-next-like-this
          :desc "unmark previous" "v" 'mc/unmark-previous-like-this
          :desc "skip to previous" "V" 'mc/skip-to-previous-like-this
-         :desc "quit" "q" 'mc/keyboard-quit
-         )))
+         :desc "quit" "q" 'mc/keyboard-quit)))
 
 (configure-smartparens)
 (configure-multiple-cursors)
