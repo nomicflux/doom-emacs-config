@@ -58,6 +58,37 @@
 (require 'evil-snipe)
 (require 'evil-easymotion)
 
+(defun spx/wrap-surrounding-round (&optional arg)
+  (interactive "p")
+  (list (sp-backward-up-sexp)
+        (sp-wrap-round)))
+
+(defun spx/wrap-surrounding-square (&optional arg)
+  (interactive "p")
+  (list (sp-backward-up-sexp)
+        (sp-wrap-square)))
+
+(defun spx/wrap-surrounding-curly (&optional arg)
+  (interactive "p")
+  (list (sp-backward-up-sexp)
+        (sp-wrap-curly)))
+
+(defun configure-smartparens ()
+  (map! :leader
+        (:prefix ("k" . "smartparens")
+         :desc "wrap with parentheses" "(" 'sp-wrap-round
+         :desc "wrap surrounding with parentheses" ")" 'spx/wrap-surrounding-round
+         :desc "wrap with brackets" "[" 'sp-wrap-square
+         :desc "wrap surrounding with brackets" "]" 'spx/wrap-surrounding-square
+         :desc "wrap with braces" "{" 'sp-wrap-curly
+         :desc "wrap surrounding with braces" "}" 'spx/wrap-surrounding-curly
+         (:prefix ("w" . "Wrap")
+          :desc "Backticks" "`" 'sp-wrap-backtick
+          :desc "Tildes" "~" 'sp-wrap-tilde
+          ))))
+
+(configure-smartparens)
+
 (defun clojure-mode-setup ()
   (require 'clj-refactor)
   (require 'flyncheck-clj-kondo)
