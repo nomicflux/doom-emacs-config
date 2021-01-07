@@ -185,16 +185,20 @@
 (configure-multiple-cursors)
 
 (defun clojure-mode-setup ()
-  (require 'clj-refactor)
-  (require 'flyncheck-clj-kondo)
+  (require 'flycheck-clj-kondo)
   (require 'flycheck-joker)
+  (require 'clj-refactor)
   (dolist (checker '(clj-kondo-clj clj-kondo-cljs clj-kondo-cljc clj-kondo-edn))
     (setq flycheck-checkers (cons checker (delq checker flycheck-checkers))))
   (dolist (checkers '((clj-kondo-clj . clojure-joker)
                       (clj-kondo-cljs . clojurescript-joker)
                       (clj-kondo-cljc . clojure-joker)
                       (clj-kondo-edn . edn-joker)))
-    (flycheck-add-next-checker (car checkers) (cons 'error (cdr checkers)))))
+    (flycheck-add-next-checker (car checkers) (cons 'error (cdr checkers))))
+  (clj-refactor-mode 1)
+  (yas-minor-mode 1) ; for adding require/use/import statements
+    ;; This choice of keybinding leaves cider-macroexpand-1 unbound
+  (cljr-add-keybindings-with-prefix "C-c C-R"))
 
 (add-hook 'clojure-mode-hook 'clojure-mode-setup) 
 
