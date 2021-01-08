@@ -16,6 +16,7 @@
 (package! ruby-electric)
 (package! evil-snipe)
 (package! evil-easymotion)
+(package! tao-theme)
 
 
 ;; To install a package directly from a remote git repo, you must specify a
