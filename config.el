@@ -25,8 +25,9 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-gruvbox)
-(setq doom-font (font-spec :family "Iosevka Term" :size 16 :weight 'light))
+(setq doom-theme 'doom-wilmersdorf)
+(setq doom-font (font-spec :family "Iosevka" :size 14 :weight 'light))
+(setq doom-big-font (font-spec :family "Iosevka" :size 18 :weight 'light))
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -184,23 +185,35 @@
 (configure-smartparens)
 (configure-multiple-cursors)
 
+;; (defun nf/coding-mode ()
+;;                 (interactive)
+;;                 (cond ((bound-and-true-p writeroom-mode)
+;;                        (writeroom-mode -1)
+;;                        (toggle-frame-fullscreen))
+;;                       (t
+;;                         (writeroom-mode 1)
+;;                         (toggle-frame-fullscreen))))
+
 (defun clojure-mode-setup ()
   (require 'flycheck-clj-kondo)
-  (require 'flycheck-joker)
+  ;; (require 'flycheck-joker)
   (require 'clj-refactor)
   (dolist (checker '(clj-kondo-clj clj-kondo-cljs clj-kondo-cljc clj-kondo-edn))
     (setq flycheck-checkers (cons checker (delq checker flycheck-checkers))))
-  (dolist (checkers '((clj-kondo-clj . clojure-joker)
-                      (clj-kondo-cljs . clojurescript-joker)
-                      (clj-kondo-cljc . clojure-joker)
-                      (clj-kondo-edn . edn-joker)))
-    (flycheck-add-next-checker (car checkers) (cons 'error (cdr checkers))))
+  ;; (dolist (checkers '((clj-kondo-clj . clojure-joker)
+  ;;                     (clj-kondo-cljs . clojurescript-joker)
+  ;;                     (clj-kondo-cljc . clojure-joker)
+  ;;                     (clj-kondo-edn . edn-joker)))
+  ;;   (flycheck-add-next-checker (car checkers) (cons 'error (cdr checkers))))
   (clj-refactor-mode 1)
   (yas-minor-mode 1) ; for adding require/use/import statements
-    ;; This choice of keybinding leaves cider-macroexpand-1 unbound
+  ;; This choice of keybinding leaves cider-macroexpand-1 unbound
   (cljr-add-keybindings-with-prefix "C-c C-R"))
 
-(add-hook 'clojure-mode-hook 'clojure-mode-setup) 
+(add-hook 'clojure-mode-hook 'clojure-mode-setup)
 
+(require 'writeroom-mode)
+;;https://github.com/joostkremers/writeroom-mode#fullscreen-effect
+(setq writeroom-fullscreen-effect 'fullboth)
 
-
+(toggle-frame-fullscreen)
