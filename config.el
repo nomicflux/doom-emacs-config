@@ -182,8 +182,14 @@
          :desc "skip to previous" "V" 'mc/skip-to-previous-like-this
          :desc "quit" "q" 'mc/keyboard-quit)))
 
+(defun configure-test-toggle ()
+  (map! :leader
+        (:prefix "c"
+         :desc "Jump to test" "T" 'projectile-toggle-between-implementation-and-test)))
+
 (configure-smartparens)
 (configure-multiple-cursors)
+(configure-test-toggle)
 
 ;; (defun nf/coding-mode ()
 ;;                 (interactive)
@@ -193,6 +199,11 @@
 ;;                       (t
 ;;                         (writeroom-mode 1)
 ;;                         (toggle-frame-fullscreen))))
+;;
+
+(defun clojure-save-hook ()
+  (cider-load-buffer)
+  (cider-ns-reload))
 
 (defun clojure-mode-setup ()
   (require 'flycheck-clj-kondo)
@@ -207,9 +218,12 @@
   ;;   (flycheck-add-next-checker (car checkers) (cons 'error (cdr checkers))))
   (clj-refactor-mode 1)
   (yas-minor-mode 1) ; for adding require/use/import statements
+  (add-hook 'after-save-hook 'clojure-save-hook)
+  (add-hook 'find-file-hook 'cider-load-buffer)
   ;; This choice of keybinding leaves cider-macroexpand-1 unbound
   (cljr-add-keybindings-with-prefix "C-c C-R"))
 
+(setq cider-test-show-report-on-success t)
 (add-hook 'clojure-mode-hook 'clojure-mode-setup)
 
 (require 'writeroom-mode)
