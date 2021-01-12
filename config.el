@@ -89,7 +89,7 @@
 (def-sp-alternatives "unwrap-sexp")
 (def-sp-alternatives "splice-sexp")
 (def-sp-alternatives "splice-sexp-killing-around")
-(def-sp-alternatives "forward-parallel-sexp")
+(def-sp-alternatives "next-sexp")
 (def-sp-alternatives "backward-parallel-sexp")
 (def-sp-alternatives "beginning-of-sexp")
 (def-sp-alternatives "end-of-sexp")
@@ -119,10 +119,10 @@
          :desc "backward down sexp" "d" 'sp-backward-down-sexp
          :desc "backward up sexp" "U" 'sp-backward-up-sexp
          :desc "down sexp" "D" 'sp-down-sexp
-         :desc "next sexp" "n" 'sp-forward-parallel-sexp
+         :desc "next sexp" "n" 'sp-next-sexp
+         :desc "next surrounding sexp" "N" 'spx/with-surrounding-next-sexp
          :desc "previous sexp" "h" 'sp-backward-parallel-sexp
-         :desc "next surrounding sexp" "n" 'spx/with-surrounding-forward-parallel-sexp
-         :desc "previous surrounding sexp" "h" 'spx/with-surrounding-backward-parallel-sexp
+         :desc "previous surrounding sexp" "H" 'spx/with-surrounding-backward-parallel-sexp
          :desc "kill" "k" 'sp-kill-sexp
          :desc "kill surrounding" "K" 'spx/with-surrounding-kill-sexp
          :desc "yank" "y" 'sp-copy-sexp
