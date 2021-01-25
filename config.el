@@ -202,8 +202,11 @@
 ;;
 
 (defun clojure-save-hook ()
-  (cider-load-buffer)
-  (cider-ns-reload))
+  (if (and (cider-connected-p)
+           (string= "(ns " (buffer-substring-no-properties 1 5))
+           (string-match "\\.clj$" (buffer-name)))
+      (cider-load-buffer)
+      (cider-ns-refresh)))
 
 (defun clojure-mode-setup ()
   (require 'flycheck-clj-kondo)
@@ -222,6 +225,8 @@
   (add-hook 'find-file-hook 'cider-load-buffer)
   ;; This choice of keybinding leaves cider-macroexpand-1 unbound
   (cljr-add-keybindings-with-prefix "C-c C-R"))
+
+(setq git-commit-summary-max-length 80)
 
 (setq cider-test-show-report-on-success t)
 (add-hook 'clojure-mode-hook 'clojure-mode-setup)
