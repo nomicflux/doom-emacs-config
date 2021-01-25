@@ -58,138 +58,17 @@
 (require 'flycheck)
 (require 'evil-snipe)
 (require 'evil-easymotion)
+(require 'writeroom-mode)
 
-(defmacro def-sp-alternatives (name)
-  (let ((surr-name (concat "spx/with-surrounding-" name))
-        (orig-name (concat "sp-" name))
-        (i-name (concat "spx/" name "-i")))
-    `(progn
-       (defun ,(read surr-name)
-           (&optional arg)
-         (interactive)
-         (sp-backward-up-sexp)
-         (,(read orig-name)))
-       (defun ,(read (concat surr-name "-i"))
-           (&optional arg)
-         (interactive)
-         (,(read surr-name))
-         (call-interactively #'evil-insert))
-       (defun ,(read i-name)
-           (&optional arg)
-         (interactive)
-         (,(read orig-name))
-         (call-interactively #'evil-insert)))))
-
-(def-sp-alternatives "wrap-round")
-(def-sp-alternatives "wrap-square")
-(def-sp-alternatives "wrap-curly")
-(def-sp-alternatives "kill-sexp")
-(def-sp-alternatives "copy-sexp")
-(def-sp-alternatives "transpose-sexp")
-(def-sp-alternatives "unwrap-sexp")
-(def-sp-alternatives "splice-sexp")
-(def-sp-alternatives "splice-sexp-killing-around")
-(def-sp-alternatives "next-sexp")
-(def-sp-alternatives "backward-parallel-sexp")
-(def-sp-alternatives "beginning-of-sexp")
-(def-sp-alternatives "end-of-sexp")
-
-(defun spx/select-surrounding (&optional arg)
-  (interactive)
-  (sp-backward-up-sexp)
-  (sp-select-next-thing))
-
-(defun configure-smartparens ()
-  (map! :leader
-        (:prefix ("k" . "smartparens")
-         :desc "wrap with parens" "(" 'sp-wrap-round
-         :desc "surround with parens" ")" 'spx/with-surrounding-wrap-round
-         :desc "wrap with brackets" "[" 'sp-wrap-square
-         :desc "surround with brackets" "]" 'spx/with-surrounding-wrap-square
-         :desc "wrap with braces" "{" 'sp-wrap-curly
-         :desc "surround with braces" "}" 'spx/with-surrounding-wrap-curly
-         :desc "convolute" "c" 'sp-convolute-sexp
-         :desc "swap" "C" 'sp-swap-enclosing-sexp
-         :desc "expand region" "e" 'er/expand-region
-         :desc "slurp forward" "f" 'sp-forward-slurp-sexp
-         :desc "barf forward" "F" 'sp-forward-barf-sexp
-         :desc "slurp backward" "b" 'sp-backward-slurp-sexp
-         :desc "barf backward" "b" 'sp-backward-barf-sexp
-         :desc "up sexp" "u" 'sp-up-sexp
-         :desc "backward down sexp" "d" 'sp-backward-down-sexp
-         :desc "backward up sexp" "U" 'sp-backward-up-sexp
-         :desc "down sexp" "D" 'sp-down-sexp
-         :desc "next sexp" "n" 'sp-next-sexp
-         :desc "next surrounding sexp" "N" 'spx/with-surrounding-next-sexp
-         :desc "previous sexp" "h" 'sp-backward-parallel-sexp
-         :desc "previous surrounding sexp" "H" 'spx/with-surrounding-backward-parallel-sexp
-         :desc "kill" "k" 'sp-kill-sexp
-         :desc "kill surrounding" "K" 'spx/with-surrounding-kill-sexp
-         :desc "yank" "y" 'sp-copy-sexp
-         :desc "yank surrounding" "Y" 'spx/with-surrounding-copy-sexp
-         :desc "select surrounding" "S" 'spx/select-surrounding
-         :desc "transpose" "t" 'sp-transpose-sexp
-         :desc "transpose surrounding" "T" 'spx/with-surrounding-transpose-sexp
-         :desc "unwrap" "-" 'sp-unwrap-sexp
-         :desc "unwrap surrounding" "_" 'spx/with-surrounding-unwrap-sexp
-         :desc "beginning of sexp" ";" 'sp-beginning-of-sexp
-         :desc "beginning of surrounding sexp" ":" 'spx/with-surrounding-beginning-of-sexp
-         :desc "end of sexp" "z" 'sp-end-of-sexp
-         :desc "end of surrounding sexp" "Z" 'spx/with-surrounding-end-of-sexp
-         (:prefix ("i" . "insert")
-          :desc "wrap with parens" "(" 'spx/wrap-round-i
-          :desc "surround with parens" ")" 'spx/with-surrounding-wrap-round-i
-          :desc "wrap with brackets" "[" 'spx/wrap-square-i
-          :desc "surround with brackets" "]" 'spx/with-surrounding-wrap-square-i
-          :desc "wrap with braces" "{" 'spx/wrap-curly-i
-          :desc "surround with braces" "}" 'spx/with-surrounding-wrap-curly-i
-          :desc "kill" "k" 'spx/kill-sexp-i
-          :desc "kill surrounding" "K" 'spx/with-surrounding-kill-sexp-i
-          :desc "yank" "y" 'spx/copy-sexp-i
-          :desc "yank surrounding" "Y" 'spx/with-surrounding-copy-sexp-i
-          :desc "beginning of sexp" ";" 'spx/beginning-of-sexp-i
-          :desc "beginning of surrounding sexp" ":" 'spx/with-surrounding-beginning-of-sexp-i
-          :desc "end of sexp" "z" 'spx/end-of-sexp-i
-          :desc "end of surrounding sexp" "Z" 'spx/with-surrounding-end-of-sexp-i)
-         (:prefix ("s" . "splice")
-          :desc "sexp" "s" 'sp-splice-sexp
-          :desc "sexp surrounding" "S" 'spx/with-surrounding-splice-sexp
-          :desc "around" "a" 'sp-splice-sexp-killing-around
-          :desc "around surrounding" "A" 'spx/with-surrounding-splice-sexp-killing-around
-          :desc "forward" "f" 'sp-splice-sexp-killing-forward
-          :desc "backward" "b" 'sp-splice-sexp-killing-backward))))
-
-(defun configure-multiple-cursors ()
-  (map! :leader
-        (:prefix ("j" . "multiple-cursors")
-         :desc "edit lines" "e" 'mc/edit-lines
-         :desc "mark" "m" 'mc/mark-all-like-this-in-defun
-         :desc "mark all" "M" 'mc/mark-all-like-this
-         :desc "syms in defun" "s" 'mc/mark-all-symbols-like-this-in-defun
-         :desc "all syms" "S" 'mc/mark-all-symbols-like-this
-         :desc "words in defun" "w" 'mc/mark-all-words-like-this-in-defun
-         :desc "all words" "W" 'mc/mark-all-words-like-this
-         :desc "next" "n" 'mc/mark-next-like-this
-         :desc "next word" "N" 'mc/mark-next-like-this-word
-         :desc "prev" "h" 'mc/mark-previous-like-this
-         :desc "prev word" "H" 'mc/mark-previous-like-this-word
-         :desc "vertical align" "a" 'mc/vertical-align
-         :desc "mark tag pair" "t" 'mc/mark-sgml-tag-pair
-         :desc "pop" "p" 'mc/mark-pop
-         :desc "unmark next" "u" 'mc/unmark-next-like-this
-         :desc "skip to next" "U" 'mc/skip-to-next-like-this
-         :desc "unmark previous" "v" 'mc/unmark-previous-like-this
-         :desc "skip to previous" "V" 'mc/skip-to-previous-like-this
-         :desc "quit" "q" 'mc/keyboard-quit)))
+(load! "spx.el")
+(load! "mcx.el")
+(load! "rt.el")
+(load! "clojure.el")
 
 (defun configure-test-toggle ()
   (map! :leader
         (:prefix "c"
          :desc "Jump to test" "T" 'projectile-toggle-between-implementation-and-test)))
-
-(configure-smartparens)
-(configure-multiple-cursors)
-(configure-test-toggle)
 
 ;; (defun nf/coding-mode ()
 ;;                 (interactive)
@@ -201,38 +80,14 @@
 ;;                         (toggle-frame-fullscreen))))
 ;;
 
-(defun clojure-save-hook ()
-  (if (and (cider-connected-p)
-           (string= "(ns " (buffer-substring-no-properties 1 5))
-           (string-match "\\.clj$" (buffer-name)))
-      (cider-load-buffer)
-      (cider-ns-refresh)))
 
-(defun clojure-mode-setup ()
-  (require 'flycheck-clj-kondo)
-  ;; (require 'flycheck-joker)
-  (require 'clj-refactor)
-  (dolist (checker '(clj-kondo-clj clj-kondo-cljs clj-kondo-cljc clj-kondo-edn))
-    (setq flycheck-checkers (cons checker (delq checker flycheck-checkers))))
-  ;; (dolist (checkers '((clj-kondo-clj . clojure-joker)
-  ;;                     (clj-kondo-cljs . clojurescript-joker)
-  ;;                     (clj-kondo-cljc . clojure-joker)
-  ;;                     (clj-kondo-edn . edn-joker)))
-  ;;   (flycheck-add-next-checker (car checkers) (cons 'error (cdr checkers))))
-  (clj-refactor-mode 1)
-  (yas-minor-mode 1) ; for adding require/use/import statements
-  (add-hook 'after-save-hook 'clojure-save-hook)
-  (add-hook 'find-file-hook 'cider-load-buffer)
-  ;; This choice of keybinding leaves cider-macroexpand-1 unbound
-  (cljr-add-keybindings-with-prefix "C-c C-R"))
-
-(setq git-commit-summary-max-length 80)
-
-(setq cider-test-show-report-on-success t)
-(add-hook 'clojure-mode-hook 'clojure-mode-setup)
-
-(require 'writeroom-mode)
 ;;https://github.com/joostkremers/writeroom-mode#fullscreen-effect
 (setq writeroom-fullscreen-effect 'fullboth)
 
+(setq git-commit-summary-max-length 80)
+(add-hook 'clojure-mode-hook 'clojure-mode-setup)
+(configure-smartparens)
+(configure-multiple-cursors)
+(configure-test-toggle)
+(add-themes)
 (toggle-frame-fullscreen)
