@@ -55,6 +55,8 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
+(use-package solaire-mode
+  :hook (after-init . solaire-global-mode))
 (require 'flycheck)
 (require 'evil-snipe)
 (require 'evil-easymotion)
