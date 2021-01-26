@@ -73,6 +73,10 @@
   (rt-random-theme-change-mode 1)
   (rt-start-randomly-changing-theme*))
 
+(defun rt-change-random-theme-freq (n)
+  (interactive "nMinutes between changes: ")
+  (setq rt-random-theme-change-freq (* 60 n)))
+
 (defun add-themes ()
   (map! :leader
         (:prefix "t"
@@ -80,4 +84,5 @@
          :desc "Random Dark Doom theme" "t" 'rt-random-dark-theme
          :desc "Random Light Doom theme" "T" 'rt-random-light-theme
          :desc "Randomly change themes" "R" 'rt-start-randomly-changing-theme
+         :desc "Change theme change frequency" "q" 'rt-change-random-theme-freq
          :desc "Stop randomly changing themes" "Q" 'rt-stop-randomly-changing-theme)))
