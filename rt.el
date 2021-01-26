@@ -1,6 +1,7 @@
 ;;; $DOOMDIR/rt.el -*- lexical-binding: t; -*-
 ;;;
 
+(require 'seq)
 (require 'doom-themes)
 
 (setq rt-light-themes '(doom-flatwhite
@@ -24,9 +25,12 @@
                        doom-zenburn
                        tao-yin))
 
+(defun not-current-theme-p (theme)
+  (not (eq doom-theme theme)))
+
 (defun rt-random-doom-theme (&optional themes)
   (interactive)
-  (let* ((ts (or themes (append rt-dark-themes rt-light-themes)))
+  (let* ((ts (seq-filter 'not-current-theme-p (or themes (append rt-dark-themes rt-light-themes))))
          (n (random (length ts)))
          (theme (nth n ts)))
     (progn
@@ -41,31 +45,39 @@
   (interactive)
   (rt-random-doom-theme rt-dark-themes))
 
-(defun add-themes ()
-  (map! :leader
-        (:prefix "t"
-         :desc "Random Doom theme" "s" 'rt-random-doom-theme
-         :desc "Random Dark Doom theme" "t" 'rt-random-dark-theme
-         :desc "Random Light Doom theme" "T" 'rt-random-light-theme)))
-
-(setq rt-random-theme-change-freq (* 5 1))
+(setq rt-random-theme-change-freq (* 60 10))
 (setq rt-random-theme-change-timer nil)
 
-(defun rt-randomly-change-theme ()
+(defun rt-stop-randomly-changing-theme* ()
+  (when rt-random-theme-change-timer
+      (cancel-timer rt-random-theme-change-timer)))
+
+(defun rt-start-randomly-changing-theme* ()
   (when (bound-and-true-p rt-random-theme-change-mode)
-    (rt-random-doom-theme))
-  (if (bound-and-true-p rt-random-theme-change-mode)
-      (setq rt-random-theme-change-timer
-            (run-with-timer rt-random-theme-change-freq nil 'rt-randomly-change-theme))
-    (when rt-random-theme-change-timer
-      (cancel-timer rt-random-theme-change-timer))))
+    (progn (rt-random-doom-theme)
+           (setq rt-random-theme-change-timer
+                (run-with-timer rt-random-theme-change-freq nil 'rt-start-randomly-changing-theme*)))))
 
 (define-minor-mode rt-random-theme-change-mode
   "Randomly change themes at a set interval"
   :lighter " rt"
   :global t)
-  ;; :after-hook 'randomly-change-theme)
 
-(add-hook 'rt-random-theme-change-mode-hook 'rt-randomly-change-theme)
+(defun rt-stop-randomly-changing-theme ()
+  (interactive)
+  (rt-random-theme-change-mode nil)
+  (rt-stop-randomly-changing-theme*))
 
-;; (rt-randomly-change-theme*)
+(defun rt-start-randomly-changing-theme ()
+  (interactive)
+  (rt-random-theme-change-mode 1)
+  (rt-start-randomly-changing-theme*))
+
+(defun add-themes ()
+  (map! :leader
+        (:prefix "t"
+         :desc "Random Doom theme" "s" 'rt-random-doom-theme
+         :desc "Random Dark Doom theme" "t" 'rt-random-dark-theme
+         :desc "Random Light Doom theme" "T" 'rt-random-light-theme
+         :desc "Randomly change themes" "R" 'rt-start-randomly-changing-theme
+         :desc "Stop randomly changing themes" "Q" 'rt-stop-randomly-changing-theme)))
