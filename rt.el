@@ -46,6 +46,7 @@
   (rt-random-doom-theme rt-dark-themes))
 
 (setq rt-random-theme-change-freq (* 60 10))
+(setq rt-random-theme-change-type 'both)
 (setq rt-random-theme-change-timer nil)
 
 (defun rt-stop-randomly-changing-theme* ()
@@ -54,7 +55,13 @@
 
 (defun rt-start-randomly-changing-theme* ()
   (when (bound-and-true-p rt-random-theme-change-mode)
-    (progn (rt-random-doom-theme)
+    (progn (rt-random-doom-theme (cond ((and rt-random-theme-change-type
+                                             (eq rt-random-theme-change-type 'dark))
+                                        rt-dark-themes)
+                                       ((and rt-random-theme-change-type
+                                             (eq rt-random-theme-change-type 'light))
+                                        rt-light-themes)
+                                       (t nil)))
            (setq rt-random-theme-change-timer
                 (run-with-timer rt-random-theme-change-freq nil 'rt-start-randomly-changing-theme*)))))
 
@@ -77,12 +84,19 @@
   (interactive "nMinutes between changes: ")
   (setq rt-random-theme-change-freq (* 60 n)))
 
+(defun rt-change-random-theme-type (c)
+  (interactive "c(d)ark, (l)ight, or (b)oth themes: ")
+  (cond ((eq c ?d) (setq rt-random-theme-change-type 'dark))
+        ((eq c ?l) (setq rt-random-theme-change-type 'light))
+        (t (setq rt-random-theme-change-type 'both))))
+
 (defun add-themes ()
   (map! :leader
         (:prefix "t"
          :desc "Random Doom theme" "s" 'rt-random-doom-theme
          :desc "Random Dark Doom theme" "t" 'rt-random-dark-theme
          :desc "Random Light Doom theme" "T" 'rt-random-light-theme
-         :desc "Randomly change themes" "R" 'rt-start-randomly-changing-theme
-         :desc "Change theme change frequency" "q" 'rt-change-random-theme-freq
-         :desc "Stop randomly changing themes" "Q" 'rt-stop-randomly-changing-theme)))
+         :desc "Start randomly changing themes" "q" 'rt-start-randomly-changing-theme
+         :desc "Stop randomly changing themes" "Q" 'rt-stop-randomly-changing-theme
+         :desc "Change theme change frequency" "x" 'rt-change-random-theme-freq
+         :desc "Change theme change type" "X" 'rt-change-random-theme-type)))
