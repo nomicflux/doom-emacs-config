@@ -26,7 +26,7 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-wilmersdorf)
-(setq doom-font (font-spec :family "Iosevka" :size 14 :weight 'light))
+(setq doom-font (font-spec :family "Iosevka" :size 16 :weight 'semi-light))
 (setq doom-big-font (font-spec :family "Iosevka" :size 18 :weight 'light))
 
 ;; If you use `org' and don't want your org files in the default location below,
@@ -61,6 +61,7 @@
 (require 'evil-snipe)
 (require 'evil-easymotion)
 (require 'writeroom-mode)
+(require 'magit)
 
 (load! "spx.el")
 (load! "mcx.el")
@@ -82,14 +83,11 @@
 ;;                         (toggle-frame-fullscreen))))
 ;;
 
-
-;;https://github.com/joostkremers/writeroom-mode#fullscreen-effect
-(setq writeroom-fullscreen-effect 'fullboth)
-
-(setq git-commit-summary-max-length 80)
-(add-hook 'clojure-mode-hook 'clojure-mode-setup)
 (configure-smartparens)
 (configure-multiple-cursors)
 (configure-test-toggle)
 (add-themes)
+;;https://github.com/joostkremers/writeroom-mode#fullscreen-effect
+(setq writeroom-fullscreen-effect 'fullboth)
 (toggle-frame-fullscreen)
+(after! magit (setq git-commit-summary-max-length 80))

@@ -3,7 +3,7 @@
 (defun clojure-save-hook ()
   (when (and (cider-connected-p)
            (string= "(ns " (buffer-substring-no-properties 1 5))
-           (string-match "\\.clj$" (buffer-name)))
+           (string-match "\\.clj.?$" (buffer-name)))
     (cider-load-buffer)
     (cider-ns-refresh)))
 
@@ -25,4 +25,7 @@
   ;; This choice of keybinding leaves cider-macroexpand-1 unbound
   (cljr-add-keybindings-with-prefix "C-c C-R"))
 
+(add-to-list 'auto-mode-alist '("\\.cljx\\'" . clojure-mode))
+
+(add-hook 'clojure-mode-hook 'clojure-mode-setup)
 (setq cider-test-show-report-on-success t)
