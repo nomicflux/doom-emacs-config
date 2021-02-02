@@ -1,5 +1,10 @@
 ;;; $DOOMDIR/clojure.el -*- lexical-binding: t; -*-
 
+(require 'clojure-mode)
+(require 'clj-refactor)
+(require 'flycheck-clj-kondo)
+(require 'parinfer)
+
 (defun clojure-save-hook ()
   (when (and (cider-connected-p)
            (string= "(ns " (buffer-substring-no-properties 1 5))
