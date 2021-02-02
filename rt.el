@@ -4,23 +4,33 @@
 (require 'seq)
 (require 'doom-themes)
 
-(setq rt-light-themes '(doom-flatwhite
+(setq rt-light-themes '(doom-acario-light
+                        doom-flatwhite
                         doom-gruvbox-light
                         doom-nord-light
+                        doom-one-light
                         doom-opera-light
                         doom-solarized-light
+                        doom-tomorrow-day
                         tao-yang))
 
-(setq rt-dark-themes '(doom-fairy-floss
+(setq rt-dark-themes '(doom-acario-dark
+                       doom-challenger-deep
+                       doom-city-lights
+                       doom-fairy-floss
                        doom-gruvbox
+                       doom-laserwave
+                       doom-miramare
                        doom-molokai
                        doom-monokai-spectrum
                        doom-moonlight
                        doom-nord
                        doom-nova
                        doom-oceanic-next
+                       doom-palenight
                        doom-solarized-dark
                        doom-spacegrey
+                       doom-tomorrow-night
                        doom-wilmersdorf
                        doom-zenburn
                        tao-yin))
@@ -62,8 +72,9 @@
                                              (eq rt-random-theme-change-type 'light))
                                         rt-light-themes)
                                        (t nil)))
+           (when rt-random-theme-change-timer (rt-stop-randomly-changing-theme*))
            (setq rt-random-theme-change-timer
-                (run-with-timer rt-random-theme-change-freq nil 'rt-start-randomly-changing-theme*)))))
+                 (run-with-timer rt-random-theme-change-freq nil 'rt-start-randomly-changing-theme*)))))
 
 (define-minor-mode rt-random-theme-change-mode
   "Randomly change themes at a set interval"
