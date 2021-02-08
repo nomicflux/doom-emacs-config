@@ -3,7 +3,6 @@
 (require 'clojure-mode)
 (require 'clj-refactor)
 (require 'flycheck-clj-kondo)
-(require 'parinfer)
 
 (defun clojure-save-hook ()
   (when (and (cider-connected-p)
@@ -25,8 +24,8 @@
   ;;   (flycheck-add-next-checker (car checkers) (cons 'error (cdr checkers))))
   (clj-refactor-mode 1)
   (yas-minor-mode 1) ; for adding require/use/import statements
-  (add-hook 'after-save-hook 'clojure-save-hook)
-  (add-hook 'find-file-hook 'cider-load-buffer)
+  (add-hook 'after-save-hook 'clojure-save-hook nil 'make-it-local)
+  ;;(add-hook 'find-file-hook 'cider-load-buffer)
   ;; This choice of keybinding leaves cider-macroexpand-1 unbound
   (cljr-add-keybindings-with-prefix "C-c C-R"))
 
@@ -34,3 +33,5 @@
 
 (add-hook 'clojure-mode-hook 'clojure-mode-setup)
 (setq cider-test-show-report-on-success t)
+(setq cider-repl-use-pretty-printing t)
+(setq cider-repl-use-clojure-font-lock t)
