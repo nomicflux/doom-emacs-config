@@ -101,12 +101,28 @@
         ((eq c ?l) (setq rt-random-theme-change-type 'light))
         (t (setq rt-random-theme-change-type 'both))))
 
+(defun subtract-time (h m s)
+  (let ((nm (- m s)))
+    (if (< nm 0)
+        (list (- h 1) (+ nm 60))
+      (list h nm))))
+
+(defun rt-change-on-timer (h m)
+  (interactive "nHour: \nnMinute: ")
+  (let* ((time-str (format "%02d:%02d" h m))
+         (five-minutes (subtract-time h m 5))
+         (one-minute (subtract-time h m 1))
+         (five-minute-str (format "%02d:%02d" (car five-minutes) (cadr five-minutes)))
+         (one-minute-str (format "%02d:%02d" (car one-minute) (cadr one-minute))))
+    (run-at-time five-minute-str nil 'rt-random-dark-theme)
+    (run-at-time one-minute-str nil 'rt-random-light-theme)
+    (run-at-time time-str nil 'rt-random-dark-theme)))
+
 (defun add-themes ()
   (map! :leader
         (:prefix "t"
          :desc "Random Doom theme" "s" 'rt-random-doom-theme
-         :desc "Random Dark Doom theme" "t" 'rt-random-dark-theme
-         :desc "Random Light Doom theme" "T" 'rt-random-light-theme
+         :desc "Theme change on timer" "t" 'rt-change-on-timer
          :desc "Start randomly changing themes" "q" 'rt-start-randomly-changing-theme
          :desc "Stop randomly changing themes" "Q" 'rt-stop-randomly-changing-theme
          :desc "Change theme change frequency" "x" 'rt-change-random-theme-freq
