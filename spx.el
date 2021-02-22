@@ -52,6 +52,7 @@
          :desc "convolute" "c" 'sp-convolute-sexp
          :desc "swap" "C" 'sp-swap-enclosing-sexp
          :desc "expand region" "e" 'er/expand-region
+         :desc "contract region" "E" 'er/contract-region
          :desc "slurp forward" "f" 'sp-forward-slurp-sexp
          :desc "barf forward" "F" 'sp-forward-barf-sexp
          :desc "slurp backward" "b" 'sp-backward-slurp-sexp
