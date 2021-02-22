@@ -4,8 +4,7 @@
 (require 'seq)
 (require 'doom-themes)
 
-(setq rt-light-themes '(doom-acario-light
-                        doom-flatwhite
+(setq rt-light-themes '(doom-flatwhite
                         doom-gruvbox-light
                         doom-nord-light
                         doom-one-light
@@ -14,8 +13,7 @@
                         doom-tomorrow-day
                         tao-yang))
 
-(setq rt-dark-themes '(doom-acario-dark
-                       doom-challenger-deep
+(setq rt-dark-themes '(doom-challenger-deep
                        doom-city-lights
                        doom-fairy-floss
                        doom-gruvbox
@@ -107,13 +105,15 @@
         (list (- h 1) (+ nm 60))
       (list h nm))))
 
+(defun time-str (time)
+  (pcase-let ((`(,h ,m) time))
+      (format "%02d:%02d" h m)))
+
 (defun rt-change-on-timer (h m)
   (interactive "nHour: \nnMinute: ")
-  (let* ((time-str (format "%02d:%02d" h m))
-         (five-minutes (subtract-time h m 5))
-         (one-minute (subtract-time h m 1))
-         (five-minute-str (format "%02d:%02d" (car five-minutes) (cadr five-minutes)))
-         (one-minute-str (format "%02d:%02d" (car one-minute) (cadr one-minute))))
+  (let* ((time-str (time-str (list h m)))
+         (five-minute-str (time-str (subtract-time h m 5)))
+         (one-minute-str (time-str (subtract-time h m 1))))
     (run-at-time five-minute-str nil 'rt-random-dark-theme)
     (run-at-time one-minute-str nil 'rt-random-light-theme)
     (run-at-time time-str nil 'rt-random-dark-theme)))
