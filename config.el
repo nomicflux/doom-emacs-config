@@ -91,3 +91,4 @@
 (setq writeroom-fullscreen-effect 'fullboth)
 (toggle-frame-fullscreen)
 (after! magit (setq git-commit-summary-max-length 80))
+(evil-ex-define-cmd "W[rite]" 'evil-write)
