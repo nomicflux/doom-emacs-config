@@ -92,3 +92,23 @@
 (toggle-frame-fullscreen)
 (after! magit (setq git-commit-summary-max-length 80))
 (evil-ex-define-cmd "W[rite]" 'evil-write)
+
+(defun open-with-test
+    (&optional arg)
+  (interactive)
+  (tab-close-other)
+  (evil-window-vsplit)
+  (evil-window-right)
+  (projectile-toggle-between-implementation-and-test))
+
+(defun configure-code-nav ()
+  (map! :leader
+          (:prefix ("c" . "code")
+         :desc "display with test" "z" 'open-with-test)))
+
+(configure-code-nav)
+
+(setq hl-todo-keyword-faces
+      '(("TODO"   . "#FF0000")
+        ("FAIL-AFTER" . "#A020F0")
+        ("STUB"   . "#1E90FF")))
