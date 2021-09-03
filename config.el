@@ -112,3 +112,7 @@
       '(("TODO"   . "#FF0000")
         ("FAIL-AFTER" . "#A020F0")
         ("STUB"   . "#1E90FF")))
+
+(after! projectile 
+  (setq projectile-project-root-files-bottom-up 
+    (remove ".git" projectile-project-root-files-bottom-up)))
