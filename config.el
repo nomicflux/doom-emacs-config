@@ -114,8 +114,6 @@
         ("STUB"   . "#1E90FF")))
 
 (after! projectile 
-  (setq projectile-project-root-files-bottom-up 
-    (remove ".git" projectile-project-root-files-bottom-up))
   (add-hook 'projectile-after-switch-project-hook (lambda ()
       (projectile-invalidate-cache nil)))
   
@@ -130,5 +128,7 @@
         (when (fboundp 'recentf-cleanup)
             (recentf-cleanup)))
         (projectile-hash-keys projectile-projects-cache))
-    (projectile-serialize-cache))))
-
+    (projectile-serialize-cache)))
+    
+  (setq projectile-project-root-files-bottom-up 
+    (remove ".git" projectile-project-root-files-bottom-up)))
