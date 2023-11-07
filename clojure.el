@@ -35,3 +35,4 @@
 (setq cider-test-show-report-on-success t)
 (setq cider-repl-use-pretty-printing t)
 (setq cider-repl-use-clojure-font-lock t)
+(setq projectile-create-missing-test-files t)
