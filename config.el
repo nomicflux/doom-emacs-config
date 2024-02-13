@@ -9,6 +9,10 @@
 (setq user-full-name "Michael Anderson"
       user-mail-address "manderson@drwholdings.com")
 
+(setq shell-file-name (executable-find "bash"))
+(setq-default vterm-shell (executable-find "fish"))
+(setq-default explicit-shell-file-name (executable-find "fish"))
+
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
 ;;
@@ -67,6 +71,7 @@
 (load! "mcx.el")
 (load! "rt.el")
 (load! "clojure.el")
+(load! "scala.el")
 
 (defun configure-test-toggle ()
   (map! :leader

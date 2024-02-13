@@ -17,6 +17,9 @@
 (package! evil-snipe)
 (package! evil-easymotion)
 (package! tao-theme)
+(package! use-package)
+(package! dap-mode)
+(package! lsp-metals)
 
 (package! map :pin "bb50dba")
 (package! straight :pin "3eca39d")
