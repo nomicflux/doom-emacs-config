@@ -93,7 +93,7 @@
        (eval +overlay)     ; run code, run (also, repls)
        ;;gist              ; interacting with github gists
        lookup              ; navigate your code and its documentation
-       lsp
+       (lsp +peek)
        magit             ; a git porcelain for Emacs
        ;;make              ; run make tasks from Emacs
        ;;pass              ; password manager for nerds
@@ -103,6 +103,7 @@
        ;;taskrunner        ; taskrunner for all your projects
        ;;terraform         ; infrastructure as code
        tmux              ; an API for interacting with tmux
+       tree-sitter
        ;;upload            ; map local to remote projects via ssh/ftp
 
        :os
@@ -112,7 +113,7 @@
        :lang
        agda              ; types of types of types of types...
        ;;cc                ; C/C++/Obj-C madness
-       clojure           ; java with a lisp
+       (clojure +lsp)           ; java with a lisp
        ;;common-lisp       ; if you've seen one lisp, you've seen them all
        coq               ; proofs-as-programs
        ;;crystal           ; ruby at the speed of c
@@ -158,7 +159,7 @@
        ;;rst               ; ReST in peace
        (ruby +rails)     ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
        rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-       (scala +lsp)             ; java, but good
+       (scala +lsp +tree-sitter)             ; java, but good
        scheme            ; a fully conniving family of lisps
        sh                ; she sells {ba,z,fi}sh shells on the C xor
        ;;sml

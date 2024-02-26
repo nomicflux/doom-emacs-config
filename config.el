@@ -9,9 +9,8 @@
 (setq user-full-name "Michael Anderson"
       user-mail-address "manderson@drwholdings.com")
 
+(setq-default explicit-shell-file-name (executable-find "bash"))
 (setq shell-file-name (executable-find "bash"))
-(setq-default vterm-shell (executable-find "fish"))
-(setq-default explicit-shell-file-name (executable-find "fish"))
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
