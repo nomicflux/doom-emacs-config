@@ -56,7 +56,7 @@
          :desc "slurp forward" "f" 'sp-forward-slurp-sexp
          :desc "barf forward" "F" 'sp-forward-barf-sexp
          :desc "slurp backward" "b" 'sp-backward-slurp-sexp
-         :desc "barf backward" "b" 'sp-backward-barf-sexp
+         :desc "barf backward" "B" 'sp-backward-barf-sexp
          :desc "up sexp" "u" 'sp-up-sexp
          :desc "backward down sexp" "d" 'sp-backward-down-sexp
          :desc "backward up sexp" "U" 'sp-backward-up-sexp

@@ -9,6 +9,7 @@
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;(package! some-package)
 (package! flycheck)
+(package! clojure-ts-mode)
 (package! clj-refactor)
 (package! flycheck-clj-kondo)
 (package! flycheck-joker)
@@ -20,6 +21,7 @@
 (package! use-package)
 (package! dap-mode)
 (package! lsp-metals)
+(package! lsp-ui)
 
 (package! map :pin "bb50dba")
 (package! straight :pin "3eca39d")

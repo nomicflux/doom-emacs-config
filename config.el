@@ -66,6 +66,7 @@
 (require 'writeroom-mode)
 (require 'magit)
 
+(load! "lsp.el")
 (load! "spx.el")
 (load! "mcx.el")
 (load! "rt.el")
@@ -87,6 +88,7 @@
 ;;                         (toggle-frame-fullscreen))))
 ;;
 
+(configure-lsp)
 (configure-smartparens)
 (configure-multiple-cursors)
 (configure-test-toggle)
