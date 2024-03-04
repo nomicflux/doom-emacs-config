@@ -22,6 +22,10 @@
 (package! dap-mode)
 (package! lsp-metals)
 (package! lsp-ui)
+(package! cape)
+
+(when (file-exists-p "site-specific-packages.el")
+  (load! "site-specific-packages.el"))
 
 (package! map :pin "bb50dba")
 (package! straight :pin "3eca39d")

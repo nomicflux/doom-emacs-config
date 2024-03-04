@@ -3,7 +3,6 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
-
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
 (setq user-full-name "Michael Anderson"
@@ -40,7 +39,6 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
-
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
@@ -57,6 +55,8 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+
+(require 'use-package)
 
 (use-package solaire-mode
   :hook (after-init . solaire-global-mode))
@@ -87,6 +87,7 @@
 ;;                         (writeroom-mode 1)
 ;;                         (toggle-frame-fullscreen))))
 ;;
+(load! "site-specific.el")
 
 (configure-lsp)
 (configure-smartparens)
@@ -136,6 +137,6 @@
         ;;(projectile-hash-keys projectile-projects-cache)
         ;;)
     (projectile-serialize-cache)))
-    
+
   (setq projectile-project-root-files-bottom-up 
     (remove ".git" projectile-project-root-files-bottom-up)))
